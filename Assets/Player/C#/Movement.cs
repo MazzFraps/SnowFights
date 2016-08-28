@@ -42,14 +42,20 @@ namespace Assets.Player
 
 
         // STATES
-        public bool isDucking = false;
+        [SyncVar]
+        public bool isDucking;
+        [SyncVar]
         public bool isGrounded;
+        [SyncVar]
         public bool isJumping = false;
+        [SyncVar]
         private int actionNumber = 0;
-
+        [SyncVar]
         private bool hasSnowBall = false;
         [HideInInspector]
+        [SyncVar]
         public float direction = -1f;
+        [SyncVar]
         public bool gottenRekt = false;
 
 
@@ -78,13 +84,34 @@ namespace Assets.Player
             progressBar.SetActive(false);
             prevNum = actionNumber;
 
+            // Key mapping based on player ID
+            /*
             horizontalAxis = "Horizontal_P" + playerId;
             verticalAxis = "Vertical_P" + playerId;
             jumpButton = "Jump_P" + playerId;
             fire1 = "Fire1_P" + playerId;
+            */
 
+            // Universal key mapping
+            horizontalAxis = "Horizontal"; // A + D
+            verticalAxis = "Vertical"; // W + S
+            jumpButton = "Jump"; // Space
+            fire1 = "Fire1"; // Left Shift
         }
-	
+
+        public override void OnStartLocalPlayer()
+        {
+            SpriteRenderer[] components = GetComponentsInChildren<SpriteRenderer>();
+
+            for (int i = 0; i < components.Length; i++)
+            {
+                if (components[i].sprite.name == "characterBody")
+                {
+                    components[i].color = Color.green;
+                }
+            }
+        }
+
         // Update is called once per frame
         void Update () {
             if (!isLocalPlayer)
@@ -225,11 +252,16 @@ namespace Assets.Player
             myAnim.SetInteger("Action", actionNumber);
 
 
-            if (this.myAnim.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
+            if (myAnim.GetCurrentAnimatorStateInfo(0).IsName("Death")) {
                 myAnim.SetBool("GottenRekt", false);
             }
         }
-
+        /*
+        public void OnChangeGrounded(bool grounded)
+        {
+            myAnim.SetBool("Grounded", grounded);
+        }
+        */
         public void Hit() {
             myAnim.SetBool("GottenRekt", true);
             gottenRekt = true;
