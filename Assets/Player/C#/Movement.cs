@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,6 +14,7 @@ namespace Assets.Player
         public GameObject progressBar;
         private ProgressBar pBar;
 
+        [SyncVar]
         public int playerId;
 
         [HideInInspector]
@@ -72,7 +74,7 @@ namespace Assets.Player
 
         //private float verticalDirection;
 
-
+        private int lastID = 1;
 
         // Use this for initialization
         void Start () {
@@ -108,8 +110,17 @@ namespace Assets.Player
                     components[i].color = Color.green;
                 }
             }
-        }
 
+            playerId = GetComponent<NetworkIdentity>().assetId.GetHashCode();
+            Debug.Log(playerId);
+        }
+        /*
+        [Command]
+        public void CmdGetID(NetworkClient client)
+        {
+            GetComponent<NetworkView>().RPC;
+        }
+        */
         // Update is called once per frame
         void Update ()
         {
@@ -229,7 +240,7 @@ namespace Assets.Player
                 }
 
                 //sBall.GetComponent<Rigidbody2D>().velocity = new Vector3(xSpeed * transform.localScale.x, ySpeed * verticalDirection, 0);
-                CmdFire(xSpeed, ySpeed, verticalDirection);
+                CmdFire(xSpeed, ySpeed, verticalDirection, playerId);
 
                 hasSnowBall = false;
                 snowBallHand.SetActive(false);
@@ -341,14 +352,15 @@ namespace Assets.Player
         }
 
         [Command]
-        public void CmdFire(float xSpeed, float ySpeed, float verticalDirection)
+        public void CmdFire(float xSpeed, float ySpeed, float verticalDirection, int p_id)
         {
             GameObject sBall = Instantiate(snowBall, snowBallLaunchPoint.transform.position, Quaternion.identity) as GameObject;
-            sBall.GetComponent<SnowBall>().playerNum = playerId;
+            sBall.GetComponent<SnowBall>().playerNum = p_id;
 
             sBall.GetComponent<Rigidbody2D>().velocity = new Vector3(xSpeed * transform.localScale.x, ySpeed * verticalDirection, 0);
 
             NetworkServer.Spawn(sBall);
+
             snowBallHand.SetActive(false);
         }
 
