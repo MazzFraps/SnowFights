@@ -25,7 +25,7 @@ namespace Assets
         // Update is called once per frame
         void Update () {
             if(Input.anyKeyDown) {
-                Debug.Log(Input.anyKey);
+                //Debug.Log(Input.anyKey);
             }
         }
 

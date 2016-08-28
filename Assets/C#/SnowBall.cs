@@ -22,28 +22,42 @@ namespace Assets
         }
 	
         // Update is called once per frame
-        void Update () {
-            scaleX = movement.direction;
+        void Update ()
+        {
+            if (movement.direction)
+                scaleX = 1f;
+            else
+                scaleX = -1f;
+
             transform.localScale = new Vector3(scaleX, 1f, 1f);
         }
 
         void OnTriggerEnter2D(Collider2D other) {
 		
-            if(other.tag == "Player" && other.GetComponent<Movement>().playerId == playerNum) {
+            if(other.tag == "Player" && other.GetComponent<Movement>().playerId == playerNum)
+            {
 
-            } else {
-                if(other.transform.position.x >= transform.position.x) {
+            }
+            else
+            {
+                if(other.transform.position.x >= transform.position.x)
+                {
                     pushForceX = pushForce * 1f;
-                } else {
+                }
+                else
+                {
                     pushForceX = pushForce * -1f;
                 }
-                if(other.tag == "Player" && other.GetComponent<Movement>().playerId != playerNum && other.GetComponent<Movement>().gottenRekt == false) {
+
+                if(other.tag == "Player" && other.GetComponent<Movement>().playerId != playerNum && other.GetComponent<Movement>().gottenRekt == false)
+                {
                     other.GetComponent<Movement>().Hit();
                     other.GetComponent<Movement>().PushBack(pushForceX, pushForce);
                     camera.CameraShake(0.2f, 0.1f);
                 }
+
                 Destroy(gameObject);
-                GameObject sShatter = Instantiate(snowShatter, shatterPosition.transform.position, Quaternion.identity) as GameObject; // UNUSED
+                GameObject sShatter = Instantiate(snowShatter, shatterPosition.transform.position, Quaternion.identity) as GameObject;
             }
         }
     }
