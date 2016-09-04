@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Assets
-{
+
     public class CameraController : MonoBehaviour
     {
         private Vector3 basePosition;
@@ -39,4 +38,3 @@ namespace Assets
             transform.position = basePosition;
         }
     }
-}

@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
-using UnityEngine.Networking;
 
-namespace Assets.Player
-{
-    public class Movement : NetworkBehaviour
+
+    public class Movement : MonoBehaviour
     {
         // COMPONENTS
         private Rigidbody2D rb2D;
@@ -39,6 +37,9 @@ namespace Assets.Player
         public string jumpButton;
         public string fire1;
 
+        public int whiteSnowPickup;
+        public int yellowSnowPickup;
+
 
 
         // STATES
@@ -48,6 +49,7 @@ namespace Assets.Player
         private int actionNumber = 0;
 
         private bool hasSnowBall = false;
+        public bool yellowSnow = false;
         [HideInInspector]
         public float direction = -1f;
         public bool gottenRekt = false;
@@ -87,10 +89,6 @@ namespace Assets.Player
 	
         // Update is called once per frame
         void Update () {
-            if (!isLocalPlayer)
-            {
-                return;
-            }
 
             // CHECKS AND STUFF
             isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
@@ -131,16 +129,30 @@ namespace Assets.Player
             if(Input.GetAxisRaw(verticalAxis) < 0 && isGrounded && duckDelay <= 0f && !gottenRekt /* && !hasSnowBall */ ) {
                 isDucking = true;
                 if(!hasSnowBall) {
-                    actionNumber = 1;
+                if (yellowSnow)
+                {
+                   // actionNumber = 1;
                     progressBar.SetActive(true);
-                    pBar.currentPoints += 50f * Time.deltaTime;
+                    pBar.currentPoints += yellowSnowPickup * Time.deltaTime;
+                }
+                else {
+                   // actionNumber = 1;
+                    progressBar.SetActive(true);
+                    pBar.currentPoints += whiteSnowPickup * Time.deltaTime;
+                }
                     if(pBar.currentPoints >= pBar.maxPoints) {
+                    if (yellowSnow)
+                    {
+
+                    }
+                    else {
                         hasSnowBall = true;
                         snowBallHand.SetActive(true);
                         isDucking = false;
                         progressBar.SetActive(false);
                         pBar.currentPoints = 0f;
                         duckDelay = 0.4f;
+                    }
                     }
                 } else {
                     actionNumber = 0;
@@ -259,6 +271,5 @@ namespace Assets.Player
             trail.SetActive(false);
         }
     }
-}
 
     

@@ -1,8 +1,5 @@
-﻿using Assets.Player;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Assets
-{
     public class SnowBall : MonoBehaviour {
 
         public GameObject snowShatter;
@@ -47,4 +44,3 @@ namespace Assets
             }
         }
     }
-}
